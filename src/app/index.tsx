@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   SafeAreaView,
   ScrollView,
@@ -10,38 +12,41 @@ import {
   View,
 } from 'react-native';
 
-// 1. ข้อมูลสินค้าตามไฟล์เอกสาร
-const products = [
-  {
-    id: '1',
-    name: 'Steelseries Qck Heavy Large', 
-    stock: 12, 
-    category: 'Mouse Pad', 
-    location: 'Warehouse A (Lazada)', 
-    status: 'Active',
-    imageUrl: 'https://www.jib.co.th/img_master/product/original/20250917095402_73159_436_1.jpg', 
-  },
-  {
-    id: '2',
-    name: 'Logitech G640 XL Gaming Pad', 
-    stock: 7, 
-    category: 'Mouse Pad', 
-    location: 'Warehouse B (Shopee)', 
-    status: 'Active',
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqNtlEBwDCVfxviZ5UYKcaRPL5_0hLAgfchf-PN-31YA&s=10', 
-  },
-  {
-    id: '3',
-    name: 'ARTISAN Zero Gaming mouse pad', 
-    stock: 4, 
-    category: 'Mouse Pad', 
-    location: 'Warehouse C', 
-    status: 'Active',
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREuqXrgjaWCgYYOgAXJB3Gy4_mnCh-HDQszqP3NK6-fA&s=10', 
-  },
-];
+// 1. เพิ่มโครงสร้างข้อมูลเพื่อให้ TypeScript รู้จักรูปแบบของสินค้า
+interface Product {
+  id: string;
+  name: string;
+  stock: number;
+  category: string;
+  location: string;
+  status: string;
+  imageUrl: string;
+}
+
+// เปลี่ยนตรงนี้เป็นลิงก์ Raw GitHub URL ของคุณเอง
+const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/poonsak16/ip800_poonsak/refs/heads/main/product.json';
 
 export default function ProductsScreen() {
+  // 2. ใส่ <Product[]> เพื่อบอก TypeScript ว่าตัวแปรนี้จะมีข้อมูลหน้าตาตามที่เรากำหนดไว้
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(GITHUB_JSON_URL);
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1e3a8a" />
@@ -77,41 +82,48 @@ export default function ProductsScreen() {
       </View>
 
       {/* --- ส่วนแสดงรายการสินค้า (Products List) --- */}
-      <ScrollView style={styles.productsList} showsVerticalScrollIndicator={false}>
-        {products.map((product) => (
-          <View key={product.id} style={styles.productCard}>
-            <View style={styles.productInfo}>
-              {/* รูปภาพสินค้า */}
-              <View style={styles.imageWrapper}>
-                <Image
-                  source={{ uri: product.imageUrl }}
-                  style={styles.productImage}
-                  resizeMode="contain"
-                />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#1e3a8a" />
+          <Text style={styles.loadingText}>Loading products...</Text>
+        </View>
+      ) : (
+        <ScrollView style={styles.productsList} showsVerticalScrollIndicator={false}>
+          {products.map((product) => (
+            <View key={product.id} style={styles.productCard}>
+              <View style={styles.productInfo}>
+                {/* รูปภาพสินค้า */}
+                <View style={styles.imageWrapper}>
+                  <Image
+                    source={{ uri: product.imageUrl }}
+                    style={styles.productImage}
+                    resizeMode="contain"
+                  />
+                </View>
+                
+                {/* รายละเอียดจำนวน/คลังสินค้า */}
+                <View style={styles.productDetails}>
+                  <Text style={styles.stockText}>Stock: {product.stock} in stock</Text>
+                  <Text style={styles.categoryText}>Category: {product.category}</Text>
+                  <Text style={styles.locationText}>Location: {product.location}</Text>
+                </View>
+                
+                {/* ปุ่มสถานะด้านขวา */}
+                <View style={styles.productActions}>
+                  <TouchableOpacity style={styles.statusButton}>
+                    <Text style={styles.statusText}>{product.status}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.moreButton}>
+                    <Text style={styles.moreIcon}>›</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              
-              {/* รายละเอียดจำนวน/คลังสินค้า */}
-              <View style={styles.productDetails}>
-                <Text style={styles.stockText}>Stock: {product.stock} in stock</Text>
-                <Text style={styles.categoryText}>Category: {product.category}</Text>
-                <Text style={styles.locationText}>Location: {product.location}</Text>
-              </View>
-              
-              {/* ปุ่มสถานะด้านขวา */}
-              <View style={styles.productActions}>
-                <TouchableOpacity style={styles.statusButton}>
-                  <Text style={styles.statusText}>{product.status}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.moreButton}>
-                  <Text style={styles.moreIcon}>›</Text>
-                </TouchableOpacity>
-              </View>
+              {/* ชื่อสินค้าด้านล่างการ์ด */}
+              <Text style={styles.productName}>{product.name}</Text>
             </View>
-            {/* ชื่อสินค้าด้านล่างการ์ด */}
-            <Text style={styles.productName}>{product.name}</Text>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      )}
 
       {/* --- แถบเมนูด้านล่าง (Bottom Navigation) --- */}
       <View style={styles.bottomNav}>
@@ -330,5 +342,15 @@ const styles = StyleSheet.create({
   navText: {
     fontSize: 12,
     color: '#64748b',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#1e3a8a',
+    fontSize: 14,
   },
 });
