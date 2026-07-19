@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1",
+    "name": "Steelseries Qck Heavy Large",
+    "stock": 12,
+    "category": "Mouse Pad",
+    "location": "Warehouse A (Lazada)",
+    "status": "Active",
+    "imageUrl": "https://www.jib.co.th/img_master/product/original/20250917095402_73159_436_1.jpg"
+  },
+  {
+    "id": "2",
+    "name": "Logitech G640 XL Gaming Pad",
+    "stock": 7,
+    "category": "Mouse Pad",
+    "location": "Warehouse B (Shopee)",
+    "status": "Active",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqNtlEBwDCVfxviZ5UYKcaRPL5_0hLAgfchf-PN-31YA&s=10"
+  },
+  {
+    "id": "3",
+    "name": "ARTISAN Zero Gaming mouse pad",
+    "stock": 4,
+    "category": "Mouse Pad",
+    "location": "Warehouse C",
+    "status": "Active",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREuqXrgjaWCgYYOgAXJB3Gy4_mnCh-HDQszqP3NK6-fA&s=10"
+  }
+]
