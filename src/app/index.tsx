@@ -24,7 +24,7 @@ interface Product {
 }
 
 // เปลี่ยนตรงนี้เป็นลิงก์ Raw GitHub URL ของคุณเอง
-const GITHUB_JSON_URL = 'https://raw.githubusercontent.com/poonsak16/ip800_poonsak/refs/heads/main/product.json';
+const GITHUB_JSON_URL = '';
 
 export default function ProductsScreen() {
   // 2. ใส่ <Product[]> เพื่อบอก TypeScript ว่าตัวแปรนี้จะมีข้อมูลหน้าตาตามที่เรากำหนดไว้
